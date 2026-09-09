@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { publicConfig, verifyHealth } from '../app_logic/config.mjs';
 import { verifyArtifact, artifactUrl } from '../scripts/artifacts.mjs';
+import { createGatewayClient, safeMeterEvent } from '../app_logic/gateway_client.mjs';
 
 test('fork identity changes all generated app routes without exposing unrelated env', () => {
   const config = publicConfig({ MERIT_APP_ID: 'second-app', MERIT_APP_NAME: 'Second app', SUPABASE_SERVICE_ROLE_KEY: 'secret-sentinel', MERIT_TENANT_GATEWAY_KEY: 'another-secret' });
@@ -25,4 +26,20 @@ test('modified package bytes and cross-plane asset URLs fail closed', () => {
   assert.throws(() => verifyArtifact(Buffer.from('modified fixture'), hash));
   assert.throws(() => artifactUrl('https://pkg-meritutils.vercel.app', 'merit_ux/0.1.2/merit_ux.mjs'));
   assert.throws(() => artifactUrl('https://merit-prodv01.vercel.app/pkg/meritutils', '../secrets'));
+});
+test('server gateway adapter binds every request to the fork app and strips caller subscriber ids', async () => {
+  const calls = [];
+  const client = createGatewayClient({ gateway: 'https://merit-prodv01.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long', fetchImpl: async (url, init) => {
+    calls.push({ url, init });
+    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'content-type': 'application/json' } });
+  }});
+  await client.tenant('journal', { bearer: 'verified-session', body: { text: 'private', subscriber_id: 'forged' } });
+  assert.equal(calls[0].init.headers['X-Merit-Consumer'], 'second-app');
+  assert.equal(calls[0].init.headers.Authorization, 'Bearer verified-session');
+  assert.equal(JSON.parse(calls[0].init.body).subscriber_id, undefined);
+  assert.throws(() => createGatewayClient({ gateway: 'https://merit-prod.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long' }));
+});
+test('meter event allowlist rejects identity and keeps only capability counts', () => {
+  assert.deepEqual(safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app', email: undefined }), { schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app' });
+  assert.throws(() => safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', subscriber_id: 'private' }));
 });
