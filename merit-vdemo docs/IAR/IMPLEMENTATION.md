@@ -48,6 +48,8 @@ One forkable showcase lets a builder experience and reuse the supported v01 capa
 
 The v01 gateway and store health endpoints returned HTTP 200 during the review. Gateway health reports version 0.1.92 with configured tenant/Zoom/VAPID/notify flags; these flags do not prove functionality. Its AMA/journal/leaderboard backing entries say pending. Store reports sandbox payments and zero offerings/registrations. Public skills still gate v01. Source reconciliation, scoped identity, provider operations, showcase app implementation, fork replay, deployment and release remain incomplete.
 
+Fresh probe update: on 2026-09-09, `https://merit-subsv01.vercel.app/api/v1/health`, the gateway route `/api/meritsubs/api/v1/health`, and `/showcase` returned HTTP 500 `FUNCTION_INVOCATION_FAILED`. Identity and entitlement acceptance is therefore blocked by a live provider failure, independently of the consumer adapter.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
