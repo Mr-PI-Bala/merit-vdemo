@@ -86,4 +86,34 @@ The showcase may leave BLOCKED only when all of the following are true:
 
 ## Credential wiring state
 
-Vault SSOT remains in `C:\DApps\merit-private-vault\env\merit-subs\.env.local`. The v01 operator projection is at `C:\Tools\DevChain\local\v01-runtime-20260908\merit-subs\.env.local`. The provider runtime projection is now at the gitignored `C:\DApps\merit-subs\.env.local` and contains only the provider contract keys plus `MERITSUBS_MODE=production`; it is not tracked or copied into `merit-vdemo`. `run_meritsubs.py` loads that file for local serving without overriding explicit process environment values. Vercel does not read this local file: the same names must be configured on the `merit-subsv01` project, then a deployment must be triggered and verified.
+Vault SSOT remains in the three project files under `C:\DApps\merit-private-vault\env\`. The v01 operator projections are at `C:\Tools\DevChain\local\v01-runtime-20260908\merit-prod\.env.local`, `...\merit-store\.env.local`, and `...\merit-subs\.env.local`. The corresponding gitignored local runtime files are now `C:\DApps\merit-prod\.env.local`, `C:\DApps\merit-store\.env.local`, and `C:\DApps\merit-subs\.env.local`. They are not tracked or copied into `merit-vdemo`. `run_meritsubs.py` loads the subscriber file for local serving without overriding explicit process environment values. Vercel does not read any local file: the same names must be configured on each v01 project, then a deployment must be triggered and verified.
+
+## Key audit — 2026-09-09
+
+This audit used the projected values in memory and reports names, checks, and outcomes only. No secret value was printed, committed, or sent to `merit-vdemo`.
+
+| Key name | Runtime/check | Observed result | Error or gap |
+|---|---|---|---|
+| `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` | All three local projections; Supabase REST read | Local names are present, but the projected Supabase hostname does not resolve (`No such host is known`) | The v01 Supabase URL/project reference is stale or unavailable; hosted persistence is unverified |
+| `MERIT_TENANT_GATEWAY_KEY` | `GET https://merit-prod.vercel.app/api/tenant/usage` with `X-Merit-Consumer: merit-vdemo` | HTTP 401 | The projected gateway key is rejected by the deployed gateway, or the deployed v01 key was not synchronized |
+| `VERCEL_TOKEN` | Vercel CLI `whoami` | FAIL: “token provided … is not valid” | Deployment and environment sync cannot run from this workstation until an isolated valid v01 profile/token is restored |
+| `MERITSUBS_JWT_SECRET` + `MERITSUBS_ADMIN_KEY` | Local `merit-subs` TestClient with `.env.local` | Present; local health returns 200 with `supabase` backend | Hosted subscriber health remains HTTP 500 because the fixed revision and hosted env have not been deployed |
+| `MERITSUBS_PUBLIC_BASE_URL` | Hosted subscriber health | HTTP 500 `FUNCTION_INVOCATION_FAILED` | Serverless import previously attempted to create read-only `output/audit`; deploy the `/tmp` fallback fix and recheck |
+| `MERITSTORE_BASE_URL` + `MERITSTORE_WEBHOOK_SECRET` | Hosted store health and webhook path | Health HTTP 200; webhook/checkout not proven | Store reports `offerings: 0`, so there is no v01 catalog item to exercise |
+| `SQUARE_ACCESS_TOKEN` + `SQUARE_ENVIRONMENT` | Sandbox `GET /v2/locations` | HTTP 200; sandbox mode confirmed | Token is usable, but no app-specific offering is provisioned |
+| `MERIT_METERED_API_BASE_URL` | Hosted gateway/probe | Gateway is reachable, but authenticated persistence is not proven | Metering acceptance remains open until auth, deduplication, persistence, and retrieval are demonstrated |
+| `ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID`, `ZOOM_CLIENT_SECRET` | Names-only projection review | Present in the prod projection; no live OAuth test was attempted | Refresh/verify in Zoom before claiming room-media capability |
+| `RESEND_API_KEY` | Names-only projection review | Present in the prod/store projections; no email send was attempted | Refresh/verify in Resend before claiming notification capability |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Names-only projection review | Present in prod projection; local shape not exercised | Verify application subject and rotate as a pair if push delivery is required |
+
+### How to update or refresh the failing keys
+
+- Restore an isolated v01 Vercel CLI profile (portable config under `C:\Tools\vercel-v01`), authenticate to the `meritecosystemv01` team, and replace the invalid `VERCEL_TOKEN`. Keep it outside all repositories.
+- Confirm the v01 Supabase project URL and service-role key in the vault. Rotate the service key if the project was recreated, re-run `export_v01_runtime.py`, apply the subscriber/audit/store migrations, and sync the names to the matching Vercel projects.
+- Reconcile `MERIT_TENANT_GATEWAY_KEY` with the value configured on `merit-prod`; rotate it in the vault and deploy both sides if the gateway returns 401.
+- Deploy the `merit-subs` serverless fix (`b5bafa9` / `v0.0.24` or newer), then configure `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `MERITSUBS_JWT_SECRET`, `MERITSUBS_ADMIN_KEY`, and the store webhook names on `merit-subsv01` before probing health and identity routes.
+- Keep `SQUARE_ENVIRONMENT=sandbox`; refresh the sandbox access token/application/location trio in Square and provision a `merit-vdemo` offering before checkout tests.
+- Rotate `MERITSTORE_WEBHOOK_SECRET` and subscriber JWT/admin secrets only through their provider/vault source, re-project, sync to Vercel, and rerun signed webhook plus replay tests.
+- Refresh Zoom OAuth credentials, Resend API credentials, and the VAPID key pair in their respective consoles only if those capabilities are in the release scope; re-project names into the prod runtime and run a safe provider check.
+- Publish `merit_referral` to the v01 utilities registry and pin its immutable SRI before enabling referral in the showcase.
+- Never place any of these secret values in `merit-vdemo`, browser configuration, build output, or public documentation.
