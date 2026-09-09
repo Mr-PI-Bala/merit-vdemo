@@ -1,0 +1,10 @@
+{
+  "ecosystem": "v01",
+  "base": "https://merit-prodv01.vercel.app/pkg/meritutils",
+  "artifacts": [
+    { "path": "merit_ux/0.1.2/merit_ux.mjs", "sri": "sha384-mGZi0wDONz503595DlkqYj40qLiwdCySsbtRvF9TWQNhRyUuzSk6LEkjxKeu3hau" },
+    { "path": "merit_ux/0.1.2/merit_ux.css", "sri": "sha384-EgM2H9y6qoU3kau7U3JQH8ILFUgLq5B7dbD+kcHFKPTavDe2n0uNqwRgrqfAMO/z" },
+    { "path": "merit_workbench/0.4.13/merit-workbench.js", "sri": "sha384-aNcJZoKSEJlS1Lg7qrwJ/BtMhubnl742kwXLuBxBX7ft4TdPzydlG9BCZ1HxHAON" },
+    { "path": "merit_workbench/0.4.13/merit-workbench.css", "sri": "sha384-u21263n25R9YNIR6NchCkydfaHjBQvyobfiuzh71m2cXXH7jjPQiP/HP4l0Xbu6j" }
+  ]
+}

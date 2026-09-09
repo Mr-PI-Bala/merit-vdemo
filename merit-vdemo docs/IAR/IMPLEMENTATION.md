@@ -1,0 +1,60 @@
+# MERIT VDemo implementation and acceptance
+
+Status: shell/workbench foundation implemented locally; provider and member journeys incomplete. Review date: 2026-09-08 (America/Los_Angeles).
+
+## Intended product
+
+One forkable showcase lets a builder experience and reuse the supported v01 capability set: branded app shell/workbench, identity and entitlements, personal journal, questions and leaderboard, community rooms and calendar, notifications and push, sheets, referral, metering, store registration and sandbox checkout. The same app must work with a fresh app identity without access to the operator's private vault.
+
+"Full capability" requires working user journeys and provider evidence. A link, configured-key boolean, static fixture, or package export is insufficient. Unsupported or incomplete capabilities remain tracked here until implemented and verified. Production money and third-party message delivery require their own explicit operational scope.
+
+## Architecture and ownership
+
+- merit-vdemo owns app_logic, product configuration, branding, app-scoped server adapters, the fork workflow, and end-to-end acceptance.
+- merit-prod owns gateway contracts and its canonical production Portal. v01 deployment must use an explicit isolated build/profile and preserve existing canonical production hostname ownership.
+- merit-store owns catalog, registration, checkout, payment webhooks, and commerce persistence.
+- merit-subs owns subscriber authentication, verified identity, subscription state, and entitlement contracts.
+- merit-utils owns versioned PAR packages, merit_ux shells, merit_meter ingestion, and merit_referral. Consume packages; do not copy private provider source into the showcase.
+- merit-agent-skills/Hub owns public create, ecosystem selection, compatibility pins, and reproducible fork onboarding.
+- The private vault owns provider credentials, environment projection, deployment account isolation, and release evidence. Its existing v01 HowTo remains the ecosystem gap SSOT; this file owns showcase implementation only.
+
+## Implementation sequence
+
+1. Recover reproducible provider revisions and establish the v01 capability/route matrix. Compare deployed artifacts with source; preserve v00. Resolve provider source versus deployment drift before redeploying.
+2. Project only existing `_V01` credentials into their owning server runtimes. Validate key presence, validity, minimum privilege, target account, and schema independently. Never ship platform-wide gateway, service-role, Square, Zoom, Resend, or signing keys to a browser or public fork.
+3. Establish tenant-bound provisioning and verified subscriber identity. Provision a showcase tenant and a second isolated test app; bind credentials to app identity. Reject forged identity and cross-app access before enabling private journals or member administration.
+4. Pin v01 PAR artifacts with verified integrity. Mount the actual merit_ux createAppShell for all app pages. Prove workbench and shell rendering on desktop and mobile.
+5. Implement app journeys in app_logic with provider adapters, loading/empty/error states, and persistence. Complete every acceptance row below; no silent v00 fallbacks.
+6. Provision store offerings and sandbox registration/checkout. Prove webhook signature, replay protection, idempotency, and resulting entitlements. Keep live payments behind a separately evidenced money gate.
+7. Complete privacy-preserving metering/referral and opt-in notifications. Verify provider ingest and count attribution; no subscriber PII in usage events.
+8. Prove fork portability from a clean checkout with a second app name, fresh scoped access, and no vault. Promote public v01 catalog and CompatSet only after ecosystem publish gates pass. Publish a source template and hosted showcase, then perform closeout.
+
+## Acceptance requirements
+
+- VD-MPD-01: explicit v01 routing; all selected backends belong to v01; v00 aliases unchanged. Evidence: route matrix, deployment revision, health plus positive operation probes.
+- VD-VLT-01: names-only credential manifest, scoped projection, ignored local env, no secret in source/build/browser/logs. Evidence: export verification and secret scan.
+- VD-MSU-01: sign-in/sign-out, verified session, Free/Plus entitlement transitions, expired/revoked/forged session rejection. Evidence: provider and browser tests with two accounts.
+- VD-MPD-02: app-bound credentials and subscriber-bound storage. Evidence: two-app and two-subscriber read/write/delete denial tests; no trust in caller-supplied subscriber IDs.
+- VD-MTU-01: actual createAppShell and workbench, pinned JS/CSS integrity, responsive navigation and keyboard operation. Evidence: package checks and browser screenshots.
+- VD-APP-01: journal create/read/update/delete persists privately across reload; AMA question/respond/vote and leaderboard obey entitlement caps. Evidence: real provider persistence, account isolation, limit tests.
+- VD-APP-02: community contributions and moderation, rooms, calendar availability/booking, sheet edits. Evidence: provider operations, conflict handling, persistence and authorization.
+- VD-APP-03: opt-in push/notification lifecycle, permission denial, revoke, delivery receipts and idempotency. Evidence: consented recipient tests; never send messages merely to populate proof.
+- VD-MST-01: app-specific storefront/branding, Free/Plus/add-ons, sandbox checkout, webhook-to-entitlement synchronization and replay rejection. Evidence: sandbox transaction and provider callback tests.
+- VD-MTU-02: merit_meter and merit_referral integration; usage contains app/capability counts only. Evidence: ingest persistence, attribution, duplicate/error handling, PII inspection.
+- VD-SKL-01: fresh fork changes one app identity and obtains own scoped configuration without the vault; no showcase names remain in operational paths. Evidence: second-app clean-room walkthrough, local and hosted verification.
+- VD-REL-01: supported package/CompatSet pins, completed release gates, hosted UX proof and source release. Evidence: immutable revisions, test reports, hosted URL and independent fork replay.
+
+## Current evidence and limitations
+
+The v01 gateway and store health endpoints returned HTTP 200 during the review. Gateway health reports version 0.1.92 with configured tenant/Zoom/VAPID/notify flags; these flags do not prove functionality. Its AMA/journal/leaderboard backing entries say pending. Store reports sandbox payments and zero offerings/registrations. Public skills still gate v01. Source reconciliation, scoped identity, provider operations, showcase app implementation, fork replay, deployment and release remain incomplete.
+
+## Completion record
+
+No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
+
+### Foundation implementation evidence
+
+- `npm run verify`: four boundary tests pass; build downloaded and SHA-384 verified the live v01 shell 0.1.2 and workbench 0.4.13 JS/CSS. Pins live in `cfg/packages.json`. Live v01 registry lacks the newer meter/referral entries found in source; do not silently import v00 packages.
+- Local in-app browser at `http://127.0.0.1:4317`: actual shell, legal footer, workbench grid/inspector rendered. Clicking Check connection confirmed the v01 gateway response. Fixed global workbench loading after the first browser check exposed the wrong module loading mode.
+- Public build config allowlists only app identity and generated v01 URLs. Tests reject invalid IDs, extra secret environment values in output, modified package bytes, and cross-plane URLs. A second-app test changes generated registration identity without inheriting the showcase ID.
+- These checks cover foundation portions of VD-MTU-01, VD-VLT-01, and VD-SKL-01 only. They do not prove private data, member auth, transactions, mobile rendering, hosted deployment, or complete clean-fork onboarding.
