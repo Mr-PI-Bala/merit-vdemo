@@ -21,11 +21,11 @@ This record explains why the requested full-capability showcase cannot be declar
 
 ## Why it is blocked
 
-### V01-BLK-01 — subscriber provider deployment failure
+### V01-BLK-01 — subscriber provider deployment failure — fix ready, deployment pending
 
 `https://merit-subsv01.vercel.app/api/v1/health` returns HTTP 500 `FUNCTION_INVOCATION_FAILED`. The same failure occurs through the gateway route `/api/meritsubs/api/v1/health` and `/showcase`.
 
-The recovered source is locally runnable: its isolated environment passes `python test_meritsubs.py` with 30 tests; local `/api/v1/health` and `/api/v1/showcase` return 200, and unauthenticated entitlements correctly return 401. This separates the live failure from the consumer adapter and points to Vercel deployment source, runtime, or environment parity.
+The recovered source is locally runnable: its isolated environment now passes `python -m pytest -q` with 31 tests; with `VERCEL=1` and no Supabase variables, local `/api/v1/health` and `/api/v1/showcase` return 200, and unauthenticated entitlements correctly return 401. The fix in `AgentDraven/merit-subs` commit `b5bafa9` / tag `v0.0.24` detects Vercel/Lambda, uses writable `/tmp/meritsubs` paths for file fallbacks, adds audit-tail support for the selected path, and uses the same writable fallback for subscriber persistence. The live v01 deployment still needs this revision deployed and the health/showcase/entitlements probes rerun.
 
 ### V01-BLK-02 — gateway capability backends are pending
 
@@ -54,8 +54,8 @@ The workstation has no valid `VERCEL_TOKEN` for the Vercel CLI, and the isolated
 ## Fix sequence
 
 1. Restore the isolated v01 Vercel operator session and portable Node runtime. Verify Vercel account, team `meritecosystemv01`, and each v01 project before changing any environment or deployment.
-2. Compare the deployed `merit-subsv01` revision with the `AgentDraven/merit-subs` source. Inspect Vercel build/runtime logs, Python runtime selection, dependency installation, and required v01 environment names. Redeploy only after the source and environment are matched.
-3. Require positive probes for subscriber health, showcase, guest/email/freemium onboarding, forged/expired bearer rejection, entitlements, and sandbox checkout handoff. Record deployment revision and timestamps.
+2. Deploy `AgentDraven/merit-subs` commit `b5bafa9` / tag `v0.0.24` to `merit-subsv01`. Inspect the deployment revision, Python runtime selection, dependency installation, and required v01 environment names.
+3. Require positive probes for subscriber health, showcase, guest/email/freemium onboarding, forged/expired bearer rejection, entitlements, and sandbox checkout handoff. Record deployment revision and timestamps. Keep BLK-01 open until the deployed routes return validated responses.
 4. Replace each `new_mesh_pending` gateway backing entry with a deployed provider route. Prove journal and AMA persistence, leaderboard calculation, app isolation, subscriber authorization, moderation, and idempotent writes using two apps and two subscribers.
 5. Provision a sandbox catalog for `merit-vdemo` and a separate fork-proof app. Exercise checkout, webhook signature validation, entitlement transition, replay rejection, cancellation, and downgrade behavior.
 6. Publish `merit_referral` through the v01 utilities registry with immutable bytes and SRI, or explicitly remove referral from the release acceptance scope. Implement authenticated persistent metering with capability-count-only telemetry and duplicate-event handling.
