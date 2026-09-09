@@ -37,6 +37,7 @@ function bodyForCapability(capability, body = {}) {
 }
 
 export function createGatewayClient({ gateway, appId, gatewayKey, fetchImpl = fetch }) {
+  if (typeof window !== 'undefined') throw new Error('Gateway client is server-only');
   const base = requireGateway(gateway);
   const consumer = requireSlug(appId, 'appId');
   const request = async (method, pathname, { bearer, body } = {}) => {

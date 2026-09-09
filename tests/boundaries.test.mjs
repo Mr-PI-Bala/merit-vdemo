@@ -40,6 +40,9 @@ test('server gateway adapter binds every request to the fork app and strips call
   assert.equal(calls[0].init.headers.Authorization, 'Bearer verified-session');
   assert.equal(JSON.parse(calls[0].init.body).subscriber_id, undefined);
   assert.throws(() => createGatewayClient({ gateway: 'https://merit-prod.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long' }));
+  globalThis.window = {};
+  try { assert.throws(() => createGatewayClient({ gateway: 'https://merit-prodv01.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long' }), /server-only/); }
+  finally { delete globalThis.window; }
 });
 test('meter event allowlist rejects identity and keeps only capability counts', () => {
   assert.deepEqual(safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app', email: undefined }, 'second-app'), { schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app' });

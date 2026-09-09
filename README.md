@@ -21,3 +21,5 @@ The checked-in [capability manifest](cfg/capabilities.json) is the source for wh
 Run `npm run probe:v01` for a read-only status matrix of the v01 gateway, store, subscriber, and utilities hosts. It reports status codes and safe service markers only; it does not authenticate, write data, or send messages.
 
 To prepare your own app, copy `.env.example` to `.env.local`, change `MERIT_APP_ID` and `MERIT_APP_NAME`, and rebuild. Only these public settings enter the build. Provider credentials remain on the platform. App-scoped provisioning, member journeys, hosted publishing, and clean-fork release validation are still being implemented.
+
+The gateway adapter is intentionally server-only. Do not import it from browser code or expose platform gateway keys to a fork’s public environment.
