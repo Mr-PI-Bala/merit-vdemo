@@ -72,10 +72,11 @@ export function createGatewayClient({ gateway, appId, gatewayKey, fetchImpl = fe
   });
 }
 
-export function safeMeterEvent(event = {}) {
+export function safeMeterEvent(event = {}, expectedConsumerId = '') {
   if (event.email || event.handle || event.subscriber_id || event.subscriberId) throw new Error('Meter events cannot contain subscriber identity fields');
   const allowed = ['schema', 'event_type', 'occurred_at', 'consumer_id', 'capability', 'quantity', 'source'];
   const result = Object.fromEntries(allowed.filter((key) => event[key] !== undefined).map((key) => [key, event[key]]));
   if (result.schema !== 'merit.telemetry.event.v1') throw new Error('Unsupported meter event schema');
+  if (expectedConsumerId && result.consumer_id !== expectedConsumerId) throw new Error('Meter event app identity mismatch');
   return result;
 }

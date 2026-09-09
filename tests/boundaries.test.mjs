@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { publicConfig, verifyHealth } from '../app_logic/config.mjs';
 import { verifyArtifact, artifactUrl } from '../scripts/artifacts.mjs';
 import { createGatewayClient, safeMeterEvent } from '../app_logic/gateway_client.mjs';
+import { createIdentityClient } from '../app_logic/identity_client.mjs';
 import capabilities from '../cfg/capabilities.json' with { type: 'json' };
 
 test('fork identity changes all generated app routes without exposing unrelated env', () => {
@@ -41,8 +42,23 @@ test('server gateway adapter binds every request to the fork app and strips call
   assert.throws(() => createGatewayClient({ gateway: 'https://merit-prod.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long' }));
 });
 test('meter event allowlist rejects identity and keeps only capability counts', () => {
-  assert.deepEqual(safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app', email: undefined }), { schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app' });
+  assert.deepEqual(safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app', email: undefined }, 'second-app'), { schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app' });
   assert.throws(() => safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', subscriber_id: 'private' }));
+  assert.throws(() => safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', consumer_id: 'other-app' }, 'second-app'));
+});
+test('MeritSubs adapter binds onboarding and checkout to the fork app', async () => {
+  const calls = [];
+  const gatewayClient = { capability: (name, path, options) => { calls.push({ name, path, options }); return Promise.resolve({ ok: true }); } };
+  const client = createIdentityClient({ gatewayClient, appId: 'second-app' });
+  await client.onboardFreemium({ handle: 'reader', email: 'reader@example.test' });
+  await client.entitlements('verified-token');
+  await client.checkout({ subscriberId: 'sub_123', plan: 'plus-monthly', bearer: 'verified-token' });
+  assert.equal(calls[0].name, 'meritsubs');
+  assert.equal(calls[0].path, 'api/v1/subscribers/onboard/freemium');
+  assert.equal(calls[0].options.body.consumer_id, 'second-app');
+  assert.equal(calls[2].options.body.tenant, 'second-app');
+  assert.throws(() => client.checkout({ subscriberId: 'bad/id', plan: 'plus-monthly', bearer: 'token' }));
+  assert.throws(() => createIdentityClient({ gatewayClient, appId: 'x' }));
 });
 test('capability manifest is explicit, v01-only, and does not overclaim alpha features', () => {
   const required = ['shell', 'workbench', 'identity', 'entitlements', 'journal', 'ama', 'leaderboard', 'community', 'rooms', 'calendar', 'notifications', 'store', 'metering', 'referral'];
