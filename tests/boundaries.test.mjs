@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { publicConfig, verifyHealth } from '../app_logic/config.mjs';
 import { verifyArtifact, artifactUrl } from '../scripts/artifacts.mjs';
 import { createGatewayClient, safeMeterEvent } from '../app_logic/gateway_client.mjs';
+import capabilities from '../cfg/capabilities.json' with { type: 'json' };
 
 test('fork identity changes all generated app routes without exposing unrelated env', () => {
   const config = publicConfig({ MERIT_APP_ID: 'second-app', MERIT_APP_NAME: 'Second app', SUPABASE_SERVICE_ROLE_KEY: 'secret-sentinel', MERIT_TENANT_GATEWAY_KEY: 'another-secret' });
@@ -42,4 +43,18 @@ test('server gateway adapter binds every request to the fork app and strips call
 test('meter event allowlist rejects identity and keeps only capability counts', () => {
   assert.deepEqual(safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app', email: undefined }), { schema: 'merit.telemetry.event.v1', event_type: 'journal.create', occurred_at: '2026-09-09T00:00:00Z', capability: 'journal', quantity: 1, consumer_id: 'second-app' });
   assert.throws(() => safeMeterEvent({ schema: 'merit.telemetry.event.v1', event_type: 'journal.create', subscriber_id: 'private' }));
+});
+test('capability manifest is explicit, v01-only, and does not overclaim alpha features', () => {
+  const required = ['shell', 'workbench', 'identity', 'entitlements', 'journal', 'ama', 'leaderboard', 'community', 'rooms', 'calendar', 'notifications', 'store', 'metering', 'referral'];
+  assert.deepEqual(Object.keys(capabilities.capabilities).sort(), required.sort());
+  assert.equal(capabilities.ecosystem, 'v01');
+  assert.equal(capabilities.gateway, 'https://merit-prodv01.vercel.app');
+  assert.equal(capabilities.capabilities.shell.status, 'implemented');
+  assert.equal(capabilities.capabilities.workbench.status, 'implemented');
+  for (const [name, item] of Object.entries(capabilities.capabilities)) {
+    assert.equal(item.route.includes('merit-prod.vercel.app'), false, `${name} must not use v00`);
+    assert.equal(item.route.includes('soulos.vercel.app'), false, `${name} must not use legacy provider`);
+    assert.equal(item.route.includes('somatune.vercel.app'), false, `${name} must not use legacy provider`);
+  }
+  assert.match(capabilities.capabilities.metering.blocker, /unauthenticated/);
 });

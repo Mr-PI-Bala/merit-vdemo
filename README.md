@@ -16,4 +16,6 @@ The build downloads four pinned assets through the v01 gateway and checks their 
 
 The current preview mounts the actual merit_ux shell and merit_workbench and can check its v01 gateway connection. It has no member-data backend yet; the activity grid is empty. A successful connection check is not full provider acceptance.
 
+The checked-in [capability manifest](cfg/capabilities.json) is the source for what this alpha claims. It marks only the shell and workbench as implemented; identity, journal, community, commerce, referral, and notifications remain planned, and metering is blocked on the provider ingest implementation.
+
 To prepare your own app, copy `.env.example` to `.env.local`, change `MERIT_APP_ID` and `MERIT_APP_NAME`, and rebuild. Only these public settings enter the build. Provider credentials remain on the platform. App-scoped provisioning, member journeys, hosted publishing, and clean-fork release validation are still being implemented.

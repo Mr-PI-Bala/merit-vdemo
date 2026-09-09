@@ -1,0 +1,21 @@
+{
+  "schema": "merit.vdemo.capabilities.v1",
+  "ecosystem": "v01",
+  "gateway": "https://merit-prodv01.vercel.app",
+  "capabilities": {
+    "shell": { "status": "implemented", "provider": "merit-utils", "route": "package assets" },
+    "workbench": { "status": "implemented", "provider": "merit-utils", "route": "package assets" },
+    "identity": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/api/v1/subscribers/onboard" },
+    "entitlements": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/api/v1/entitlements" },
+    "journal": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/tenant/journal" },
+    "ama": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/tenant/questions" },
+    "leaderboard": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/gw/leaderboard" },
+    "community": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/tenant/contributions" },
+    "rooms": { "status": "planned", "provider": "merit-prod community rail", "route": "/api/tenant/rooms" },
+    "calendar": { "status": "planned", "provider": "merit-prod community rail", "route": "/api/room-media/book" },
+    "notifications": { "status": "planned", "provider": "merit-prod community rail", "route": "/api/alerts/dispatch" },
+    "store": { "status": "planned", "provider": "merit-store", "route": "/store/<app>/register" },
+    "metering": { "status": "blocked", "provider": "merit-utils", "route": "/api/events/ingest", "blocker": "deployed ingest is unauthenticated and non-persistent" },
+    "referral": { "status": "planned", "provider": "merit-utils", "route": "merit_referral package" }
+  }
+}
