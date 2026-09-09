@@ -83,3 +83,7 @@ The showcase may leave BLOCKED only when all of the following are true:
 - Vault export helper: `C:\DApps\merit-private-vault\scripts\devchain\export_v01_runtime.py`
 - Operator projection: `C:\Tools\DevChain\local\v01-runtime-20260908`
 - Vault record: `C:\DApps\merit-private-vault\env\catalogs\MERIT-v01.HOWTO.md`
+
+## Credential wiring state
+
+Vault SSOT remains in `C:\DApps\merit-private-vault\env\merit-subs\.env.local`. The v01 operator projection is at `C:\Tools\DevChain\local\v01-runtime-20260908\merit-subs\.env.local`. The provider runtime projection is now at the gitignored `C:\DApps\merit-subs\.env.local` and contains only the provider contract keys plus `MERITSUBS_MODE=production`; it is not tracked or copied into `merit-vdemo`. `run_meritsubs.py` loads that file for local serving without overriding explicit process environment values. Vercel does not read this local file: the same names must be configured on the `merit-subsv01` project, then a deployment must be triggered and verified.
