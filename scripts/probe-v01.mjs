@@ -27,7 +27,7 @@ for (const [name, value] of Object.entries(gateway?.details?.backing_services ||
   if (String(value).includes('pending')) blockers.push(`gateway backing ${name} is pending`);
 }
 const store = checks.find((item) => item.name === 'store');
-if (store?.json?.store?.offerings === 0) blockers.push('store has no offerings');
+if (store?.details?.offerings === 0) blockers.push('store has no offerings');
 const ready = blockers.length === 0;
 console.log(JSON.stringify({ ecosystem: 'v01', checkedAt: new Date().toISOString(), consistency, ready, blockers, checks }, null, 2));
 if (!ready) process.exitCode = 1;
