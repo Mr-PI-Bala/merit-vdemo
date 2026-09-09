@@ -1,0 +1,85 @@
+# MERIT vDemo blocked-state record
+
+**Status:** BLOCKED
+
+**Recorded:** 2026-09-09
+
+**Scope:** v01 vaulted production integration and the forkable `merit-vdemo` showcase.
+
+This record explains why the requested full-capability showcase cannot be declared ready. It records observed facts only; it contains no secret values.
+
+## What was attempted
+
+1. Reviewed the `merit-prod` checkout, its AGENTS boundary, local verification scripts, deployed health contract, Portal routes, usage routes, and v00/v01 hostname split.
+2. Probed the live v01 gateway, store, subscriber provider, utilities host, and utilities package registry with `npm run probe:v01` from the showcase repository.
+3. Recovered the provider source checkouts for review. Installed the declared `merit-subs` Python dependencies in an isolated environment and ran its test suite and FastAPI TestClient checks.
+4. Inspected the private vault by key names only. Added `scripts/devchain/export_v01_runtime.py` with project allowlists, `_V01` projection, destination containment checks, overwrite protection, sandbox enforcement, and read-back verification.
+5. Exported 19 gateway, 16 store, and 9 subscriber v01 environment entries to `C:\Tools\DevChain\local\v01-runtime-20260908`. No values were printed, committed, or copied into the consumer repository.
+6. Built `merit-vdemo` with v01-only package pins, SRI verification, a server-only gateway adapter, a MeritSubs adapter, explicit capability manifest, fork guidance, local serving, and CI. `npm run verify` passes all eight boundary tests and the build.
+7. Created and published the private-vault changes, including tag `vault-v0.5.60`. Created `AgentDraven/merit-vdemo`, staged its application source, and published a full source mirror at `Mr-PI-Bala/merit-vdemo` with passing GitHub Actions.
+8. Corrected a consumer adapter defect so JSON POST requests include `Content-Type: application/json`; the regression test and remote CI pass.
+
+## Why it is blocked
+
+### V01-BLK-01 — subscriber provider deployment failure
+
+`https://merit-subsv01.vercel.app/api/v1/health` returns HTTP 500 `FUNCTION_INVOCATION_FAILED`. The same failure occurs through the gateway route `/api/meritsubs/api/v1/health` and `/showcase`.
+
+The recovered source is locally runnable: its isolated environment passes `python test_meritsubs.py` with 30 tests; local `/api/v1/health` and `/api/v1/showcase` return 200, and unauthenticated entitlements correctly return 401. This separates the live failure from the consumer adapter and points to Vercel deployment source, runtime, or environment parity.
+
+### V01-BLK-02 — gateway capability backends are pending
+
+The live gateway health response identifies AMA, journal, and leaderboard as `new_mesh_pending`. A configured backing-service string is not evidence of persistence, authorization, or a successful user journey, so the related acceptance rows remain open.
+
+### V01-BLK-03 — commerce has no catalog
+
+`https://merit-storev01.vercel.app/api/v1/health` returns 200 and reports Square sandbox plus Supabase enabled, but `offerings=0` and `registrations=0`. Checkout and entitlement synchronization cannot be tested without an app-specific catalog offering.
+
+### V01-BLK-04 — referral package is not published on the v01 registry
+
+The v01 registry exposes `merit_usage_meter` but no `merit_referral`. The source checkout contains a newer referral implementation, but importing an unverified source package would violate the pinned v01 artifact boundary.
+
+### V01-BLK-05 — metering is not acceptance-ready
+
+The deployed ingest contract is not proven authenticated or persistent. The consumer adapter therefore rejects subscriber identity fields and records only a safe event shape, but cannot claim working provider metering until authenticated ingest, persistence, deduplication, and retrieval are demonstrated.
+
+### V01-BLK-06 — owner repository CI authorization
+
+The AgentDraven GitHub token has `repo` access but not `workflow`. GitHub rejects a push containing `.github/workflows/verify.yml`. The owner repository therefore contains the application source and immutable tag `v0.1.0-alpha.1`, while its CI workflow is still pending account authorization. The Mr-PI-Bala mirror has the complete source and passing CI.
+
+### V01-BLK-07 — v01 deployment operator access is incomplete
+
+The workstation has no valid `VERCEL_TOKEN` for the Vercel CLI, and the isolated v01 login/profile and portable Node path recorded by the vault are not restored here. Deployment repair and v01 environment synchronization cannot be claimed from this workstation.
+
+## Fix sequence
+
+1. Restore the isolated v01 Vercel operator session and portable Node runtime. Verify Vercel account, team `meritecosystemv01`, and each v01 project before changing any environment or deployment.
+2. Compare the deployed `merit-subsv01` revision with the `AgentDraven/merit-subs` source. Inspect Vercel build/runtime logs, Python runtime selection, dependency installation, and required v01 environment names. Redeploy only after the source and environment are matched.
+3. Require positive probes for subscriber health, showcase, guest/email/freemium onboarding, forged/expired bearer rejection, entitlements, and sandbox checkout handoff. Record deployment revision and timestamps.
+4. Replace each `new_mesh_pending` gateway backing entry with a deployed provider route. Prove journal and AMA persistence, leaderboard calculation, app isolation, subscriber authorization, moderation, and idempotent writes using two apps and two subscribers.
+5. Provision a sandbox catalog for `merit-vdemo` and a separate fork-proof app. Exercise checkout, webhook signature validation, entitlement transition, replay rejection, cancellation, and downgrade behavior.
+6. Publish `merit_referral` through the v01 utilities registry with immutable bytes and SRI, or explicitly remove referral from the release acceptance scope. Implement authenticated persistent metering with capability-count-only telemetry and duplicate-event handling.
+7. Approve the AgentDraven GitHub `workflow` scope, push `.github/workflows/verify.yml` to `AgentDraven/merit-vdemo`, and verify CI on the owner-aligned repository.
+8. Run the complete acceptance set in `IMPLEMENTATION.md`, perform a clean fork using only public configuration, and change this document to **UNBLOCKED** only when every blocked acceptance row has direct provider and hosted UX evidence.
+
+## Unblock criteria
+
+The showcase may leave BLOCKED only when all of the following are true:
+
+- `npm run probe:v01` exits successfully and reports no pending or missing required provider capability.
+- Subscriber health and identity flows return validated responses on the deployed v01 host.
+- Store health reports a non-empty sandbox catalog and a completed webhook-to-entitlement test exists.
+- AMA, journal, leaderboard, metering, and referral acceptance rows have direct persistence and authorization evidence.
+- Two-app and two-subscriber isolation tests pass without trusting caller-supplied identity.
+- The owner repository contains the CI workflow and its run passes.
+- Vault export remains names-only in evidence, operator-only on disk, and absent from the consumer source, build output, and browser configuration.
+
+## Evidence locations
+
+- Consumer acceptance plan: `merit-vdemo docs/IAR/IMPLEMENTATION.md`
+- Consumer capability boundary: `cfg/capabilities.json`
+- Read-only probe: `scripts/probe-v01.mjs`
+- Gateway boundary: `app_logic/gateway_client.mjs`
+- Vault export helper: `C:\DApps\merit-private-vault\scripts\devchain\export_v01_runtime.py`
+- Operator projection: `C:\Tools\DevChain\local\v01-runtime-20260908`
+- Vault record: `C:\DApps\merit-private-vault\env\catalogs\MERIT-v01.HOWTO.md`
