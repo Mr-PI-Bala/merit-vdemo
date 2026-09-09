@@ -52,6 +52,8 @@ Fresh probe update: on 2026-09-09, `https://merit-subsv01.vercel.app/api/v1/heal
 
 Local gateway evidence: merit-prod `npm run verify` and `npm run e2e` pass on the current v00 checkout, including webpage-shell checks, usage HTML, route redirects, canonical store registration, retired-alias rejection, and Portal routes. Playwright screenshots were skipped because the package is not installed in this checkout. These results establish v00 source/runtime health only; they do not prove deployed v01 parity.
 
+Provider source evidence: the recovered `merit-subs` checkout has a valid `requirements.txt`, but this workstation has none of FastAPI, PyJWT, or pytest installed (`python -c "import api.app"` fails on `ModuleNotFoundError: jwt`; the test runner fails on missing pytest). This is a reproducibility gap to resolve in an isolated provider environment before diagnosing or redeploying the live HTTP 500.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
