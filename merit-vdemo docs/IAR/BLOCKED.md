@@ -37,7 +37,7 @@ The live gateway health response identifies AMA, journal, and leaderboard as `ne
 
 ### V01-BLK-04 — referral package is not published on the v01 registry
 
-The v01 registry exposes `merit_usage_meter` but no `merit_referral`. The source checkout contains a newer referral implementation, but importing an unverified source package would violate the pinned v01 artifact boundary.
+The v01 registry exposes `merit_usage_meter` but no `merit_referral`. The current build also receives HTTP 404 for the pinned `merit_workbench/0.4.13/merit-workbench.js` artifact. The source checkout contains newer implementations, but importing an unverified source package would violate the pinned v01 artifact boundary.
 
 ### V01-BLK-05 — metering is not acceptance-ready
 
