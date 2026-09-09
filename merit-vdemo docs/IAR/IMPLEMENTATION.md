@@ -60,6 +60,8 @@ Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `
 
 Remote CI evidence: the first workflow run failed because the repository lacked a lockfile. Added `package-lock.json` and pushed `d480423`; GitHub Actions run `34311567411` completed successfully on that commit. Fork reproducibility now has a passing remote test signal.
 
+Latest probe evidence: `npm run probe:v01` on 2026-09-09 reports gateway 200 (0.1.92), store 200 (sandbox, zero offerings), utilities homepage 200, and subscriber 500 (`FUNCTION_INVOCATION_FAILED`). The probe correctly leaves `ready=false` for the subscriber outage, pending AMA/journal/leaderboard backends, and empty store catalog. A repository secret scan found no credential-pattern matches. The showcase is published as `Mr-PI-Bala/merit-vdemo` because that is the authenticated GitHub owner; the requested `AgentDraven` owner is not available to the current CLI identity.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
