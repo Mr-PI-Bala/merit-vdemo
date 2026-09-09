@@ -58,6 +58,8 @@ Runtime recovery evidence: an isolated Python 3.12 environment at `C:\Temp\merit
 
 Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `SECURITY.md` now define a no-secret fork workflow and run `npm run verify` on every push and pull request.
 
+Remote CI evidence: the first workflow run failed because the repository lacked a lockfile. Added `package-lock.json` and pushed `d480423`; GitHub Actions run `34311567411` completed successfully on that commit. Fork reproducibility now has a passing remote test signal.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
