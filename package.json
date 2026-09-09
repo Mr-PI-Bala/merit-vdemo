@@ -8,6 +8,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",
+    "probe:v01": "node scripts/probe-v01.mjs",
     "test": "node --test tests/*.test.mjs",
     "verify": "npm test && npm run build"
   }

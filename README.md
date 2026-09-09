@@ -18,4 +18,6 @@ The current preview mounts the actual merit_ux shell and merit_workbench and can
 
 The checked-in [capability manifest](cfg/capabilities.json) is the source for what this alpha claims. It marks only the shell and workbench as implemented; identity, journal, community, commerce, referral, and notifications remain planned, and metering is blocked on the provider ingest implementation.
 
+Run `npm run probe:v01` for a read-only status matrix of the v01 gateway, store, subscriber, and utilities hosts. It reports status codes and safe service markers only; it does not authenticate, write data, or send messages.
+
 To prepare your own app, copy `.env.example` to `.env.local`, change `MERIT_APP_ID` and `MERIT_APP_NAME`, and rebuild. Only these public settings enter the build. Provider credentials remain on the platform. App-scoped provisioning, member journeys, hosted publishing, and clean-fork release validation are still being implemented.
