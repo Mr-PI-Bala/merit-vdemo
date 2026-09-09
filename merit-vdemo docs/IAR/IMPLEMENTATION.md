@@ -54,6 +54,10 @@ Local gateway evidence: merit-prod `npm run verify` and `npm run e2e` pass on th
 
 Provider source evidence: the recovered `merit-subs` checkout has a valid `requirements.txt`, but this workstation has none of FastAPI, PyJWT, or pytest installed (`python -c "import api.app"` fails on `ModuleNotFoundError: jwt`; the test runner fails on missing pytest). This is a reproducibility gap to resolve in an isolated provider environment before diagnosing or redeploying the live HTTP 500.
 
+Runtime recovery evidence: an isolated Python 3.12 environment at `C:\Temp\merit-subs-v01-venv` installed the declared requirements plus pytest. `python test_meritsubs.py` passes 30 tests; FastAPI TestClient returns `/api/v1/health` 200, `/api/v1/showcase` 200, and rejects unauthenticated `/api/v1/entitlements` with 401. The application source is therefore locally runnable; the deployed 500 requires Vercel build/runtime logs, environment parity, or deployment-source comparison.
+
+Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `SECURITY.md` now define a no-secret fork workflow and run `npm run verify` on every push and pull request.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
