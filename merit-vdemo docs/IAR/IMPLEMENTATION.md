@@ -62,6 +62,8 @@ Remote CI evidence: the first workflow run failed because the repository lacked 
 
 Latest probe evidence: `npm run probe:v01` on 2026-09-09 reports gateway 200 (0.1.92), store 200 (sandbox, zero offerings), utilities homepage 200, and subscriber 500 (`FUNCTION_INVOCATION_FAILED`). The probe correctly leaves `ready=false` for the subscriber outage, pending AMA/journal/leaderboard backends, and empty store catalog. A repository secret scan found no credential-pattern matches. The showcase is published as `Mr-PI-Bala/merit-vdemo` because that is the authenticated GitHub owner; the requested `AgentDraven` owner is not available to the current CLI identity.
 
+Current gateway checkout evidence: `C:\DApps\merit-prod\npm run e2e` passes the local portal, route, usage, redirect, and production health checks. The run skips Playwright screenshots because that dependency is absent. This confirms the v00 checkout and hosted gateway contract; it does not establish v01 provider parity.
+
 ## Completion record
 
 No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
