@@ -20,9 +20,10 @@ function requireGateway(value) {
   return url.origin;
 }
 
-function headers({ appId, gatewayKey, bearer }) {
+function headers({ appId, gatewayKey, bearer, hasBody }) {
   if (!gatewayKey || String(gatewayKey).length < 16) throw new Error('Server gateway key is required');
   const result = { 'X-Merit-Consumer': appId, 'X-Merit-Gateway-Key': gatewayKey, Accept: 'application/json' };
+  if (hasBody) result['Content-Type'] = 'application/json';
   if (bearer) result.Authorization = `Bearer ${bearer}`;
   return result;
 }
@@ -42,7 +43,7 @@ export function createGatewayClient({ gateway, appId, gatewayKey, fetchImpl = fe
   const consumer = requireSlug(appId, 'appId');
   const request = async (method, pathname, { bearer, body } = {}) => {
     const response = await fetchImpl(`${base}${pathname}`, {
-      method, headers: headers({ appId: consumer, gatewayKey, bearer }),
+      method, headers: headers({ appId: consumer, gatewayKey, bearer, hasBody: body !== undefined }),
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     const text = await response.text();

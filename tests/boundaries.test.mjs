@@ -38,6 +38,7 @@ test('server gateway adapter binds every request to the fork app and strips call
   await client.tenant('journal', { bearer: 'verified-session', body: { text: 'private', subscriber_id: 'forged' } });
   assert.equal(calls[0].init.headers['X-Merit-Consumer'], 'second-app');
   assert.equal(calls[0].init.headers.Authorization, 'Bearer verified-session');
+  assert.equal(calls[0].init.headers['Content-Type'], 'application/json');
   assert.equal(JSON.parse(calls[0].init.body).subscriber_id, undefined);
   assert.throws(() => createGatewayClient({ gateway: 'https://merit-prod.vercel.app', appId: 'second-app', gatewayKey: 'server-key-that-is-long' }));
   globalThis.window = {};
