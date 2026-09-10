@@ -8,6 +8,45 @@
 
 This record explains why the requested full-capability showcase cannot be declared ready. It records observed facts only; it contains no secret values.
 
+## Dependency flow: where to start
+
+Start at the root (the deployed v01 project and its environment), then move downward only after each parent is proven. A green build is only the first branch of the graph; hosted route behavior, persistence, authorization, and the forked user journey are separate gates.
+
+```mermaid
+flowchart TD
+    R[Root: v01 hosted projects + vault projections] --> V[Vercel project access and deployment alias]
+    R --> E[Vercel environment variables from vault]
+    R --> A[Immutable v01 artifacts and package registry]
+    V --> G[merit-prod gateway health and tenant auth]
+    V --> S[merit-subsv01 health and identity routes]
+    V --> C[merit-storev01 health and catalog]
+    E --> P[Supabase URL/key and migrations]
+    E --> K[Gateway/JWT/admin/webhook secrets]
+    E --> Q[Square sandbox credentials]
+    E --> X[Zoom, Resend, VAPID provider credentials]
+    A --> U[usage meter + referral + workbench artifacts]
+    G --> B[AMA, journal, leaderboard backing services]
+    S --> I[subscriber auth, onboarding, entitlements]
+    C --> H[checkout, signed webhook, cancellation/downgrade]
+    P --> D[persistence and audit evidence]
+    K --> D
+    Q --> H
+    U --> M[metering and referral acceptance]
+    B --> T[two-app / two-subscriber isolation]
+    I --> T
+    H --> T
+    D --> T
+    M --> T
+    T --> F[Final fork proof: public config only, no secrets]
+    V -. current evidence .-> BV[BLK-07: invalid CLI token; inspect dashboard Ready vs alias]
+    S -. current evidence .-> BS[BLK-01: canonical health 500; deploy/fix alignment pending]
+    P -. current evidence .-> BP[Key audit: projected Supabase host does not resolve]
+    A -. current evidence .-> BA[BLK-04: referral and workbench artifacts missing]
+    C -. current evidence .-> BC[BLK-03: offerings = 0]
+```
+
+The first operator action is therefore **V → E → S**: identify which deployment is serving the canonical subscriber hostname, confirm the v01 environment names on that deployment, then rerun `/api/v1/health` and the identity probes. Only after that should we spend time on catalog, metering, referral, or the final fork proof.
+
 ## What was attempted
 
 1. Reviewed the `merit-prod` checkout, its AGENTS boundary, local verification scripts, deployed health contract, Portal routes, usage routes, and v00/v01 hostname split.
@@ -50,6 +89,16 @@ The AgentDraven GitHub token has `repo` access but not `workflow`. GitHub reject
 ### V01-BLK-07 — v01 deployment operator access is incomplete
 
 The workstation has no valid `VERCEL_TOKEN` for the Vercel CLI, and the isolated v01 login/profile and portable Node path recorded by the vault are not restored here. Deployment repair and v01 environment synchronization cannot be claimed from this workstation.
+
+## Vercel deployment evidence — Ready does not equal canonical route healthy
+
+The Vercel dashboard does show recent **Ready** production deployments. That is useful evidence about the build/deployment phase, but it does not override a failing request against the canonical hostname.
+
+- `merit-prodv01`: Ready deployment `5qCiLLQYN` (11s), plus `Sshs6GD6T`, `9X66ZbHPQ`, and `6ckoinDht`. The same list contains an older Error deployment `6Yab3U7NR` and earlier Blocked Git deployments for commits `708d5b8` and `a7b2ea5`.
+- `merit-subsv01`: the dashboard shows Ready deployment `26DiDiih2` (23s, Aug 29). Its runtime log view currently shows zero Error/Fatal entries for the selected time window.
+- Direct verification still differs: `https://merit-subsv01.vercel.app/api/v1/health` returns HTTP 500, while the Ready deployment URL returns the deployment shell rather than a validated health JSON response. This means the Ready badge proves deployment completion, not that the canonical alias is serving the expected Python route with the expected environment.
+
+To resolve the discrepancy, open the deployment detail, compare its **Source** commit and **Environment Variables** with the vault projection, inspect the deployment's **Functions/Runtime Logs** for the exact request path, and then test both the deployment URL and canonical alias. Record the deployment ID, source commit, environment target, route response, and timestamp together. The Vercel deployment pages are the report source; the CLI cannot currently reproduce them because `VERCEL_TOKEN` is invalid.
 
 ## Fix sequence
 
