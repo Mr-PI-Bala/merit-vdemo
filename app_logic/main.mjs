@@ -1,4 +1,4 @@
-import { createAppShell, setStatusState } from '/vendor/merit_ux/0.1.2/merit_ux.mjs';
+import { createAppShell, setStatusState } from '/vendor/merit_ux/0.1.3/merit_ux.mjs';
 import { verifyHealth } from './config.mjs';
 
 const FEATURES = [
@@ -78,3 +78,4 @@ main().catch(() => {
   error.textContent = 'Your workspace could not open. Reload the page or check the app configuration.';
   document.body.append(error);
 });
+

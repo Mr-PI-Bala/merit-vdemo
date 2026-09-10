@@ -70,7 +70,7 @@ No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, 
 
 ### Foundation implementation evidence
 
-- `npm run verify`: four boundary tests pass; build downloaded and SHA-384 verified the live v01 shell 0.1.2 and workbench 0.4.13 JS/CSS. Pins live in `cfg/packages.json`. Live v01 registry lacks the newer meter/referral entries found in source; do not silently import v00 packages.
+- `npm run verify`: four boundary tests pass; build downloaded and SHA-384 verified the live v01 shell 0.1.3 and workbench 0.4.13 JS/CSS. Pins live in `cfg/packages.json`. Live v01 registry lacks the newer meter/referral entries found in source; do not silently import v00 packages.
 - Local in-app browser at `http://127.0.0.1:4317`: actual shell, legal footer, workbench grid/inspector rendered. Clicking Check connection confirmed the v01 gateway response. Fixed global workbench loading after the first browser check exposed the wrong module loading mode.
 - Public build config allowlists only app identity and generated v01 URLs. Tests reject invalid IDs, extra secret environment values in output, modified package bytes, and cross-plane URLs. A second-app test changes generated registration identity without inheriting the showcase ID.
 - These checks cover foundation portions of VD-MTU-01, VD-VLT-01, and VD-SKL-01 only. They do not prove private data, member auth, transactions, mobile rendering, hosted deployment, or complete clean-fork onboarding.
@@ -80,3 +80,4 @@ No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, 
 - The gateway adapter now fails closed when initialized in a browser context. This keeps `MERIT_TENANT_GATEWAY_KEY` server-only by construction; the public build has no gateway client import.
 - `npm run probe:v01` is a repeatable read-only provider gate. It checks gateway, store, subs, and utils HTTP status plus safe service/version markers and fails if any required host is unavailable or the gateway identity is inconsistent. The 2026-09-09 run reports gateway/store/utils 200 and subs 500 `FUNCTION_INVOCATION_FAILED`, so the gate correctly fails. It performs no authenticated or mutating operation.
 - The probe also fails when the gateway health declares `new_mesh_pending` backends or the store reports zero offerings. Latest run reports five blockers: subscriber host unavailable, AMA/journal/leaderboard pending, and empty store catalog. This makes HTTP 200 health insufficient for v01 release readiness.
+
