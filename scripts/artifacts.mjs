@@ -8,7 +8,7 @@ export function verifyArtifact(bytes, expected) {
 }
 
 export function artifactUrl(base, path) {
-  if (base !== 'https://merit-prodv01.vercel.app/pkg/meritutils') throw new Error('Only the v01 package gateway is supported');
+  if (base !== 'https://merit-utilsv01.vercel.app') throw new Error('Only the isolated v01 package host is supported');
   if (!/^[a-z_]+\/\d+\.\d+\.\d+\/[a-zA-Z0-9_.-]+$/.test(path)) throw new Error('Invalid package artifact path');
   return `${base}/${path}`;
 }

@@ -28,6 +28,8 @@ test('modified package bytes and cross-plane asset URLs fail closed', () => {
   verifyArtifact(bytes, hash);
   assert.throws(() => verifyArtifact(Buffer.from('modified fixture'), hash));
   assert.throws(() => artifactUrl('https://pkg-meritutils.vercel.app', 'merit_ux/0.1.2/merit_ux.mjs'));
+  assert.equal(artifactUrl('https://merit-utilsv01.vercel.app', 'merit_workbench/0.4.18/merit-workbench.js'), 'https://merit-utilsv01.vercel.app/merit_workbench/0.4.18/merit-workbench.js');
+  assert.throws(() => artifactUrl('https://merit-prodv01.vercel.app/pkg/meritutils', 'merit_ux/0.1.2/merit_ux.mjs'));
   assert.throws(() => artifactUrl('https://merit-prodv01.vercel.app/pkg/meritutils', '../secrets'));
 });
 test('server gateway adapter binds every request to the fork app and strips caller subscriber ids', async () => {
