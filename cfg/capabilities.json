@@ -5,8 +5,8 @@
   "capabilities": {
     "shell": { "status": "implemented", "provider": "merit-utils", "route": "package assets" },
     "workbench": { "status": "implemented", "provider": "merit-utils", "route": "package assets" },
-    "identity": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/api/v1/subscribers/onboard" },
-    "entitlements": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/api/v1/entitlements" },
+    "identity": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/subscribers/onboard" },
+    "entitlements": { "status": "planned", "provider": "merit-subs", "route": "/api/meritsubs/entitlements" },
     "journal": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/tenant/journal" },
     "ama": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/tenant/questions" },
     "leaderboard": { "status": "planned", "provider": "merit-prod tenant plane", "route": "/api/gw/leaderboard" },
@@ -19,3 +19,4 @@
     "referral": { "status": "planned", "provider": "merit-utils", "route": "merit_referral package" }
   }
 }
+
