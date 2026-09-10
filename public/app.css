@@ -4,6 +4,9 @@ h1, h2, p { overflow-wrap: anywhere; }
 .workspace-intro { max-width: 65ch; }
 .workspace-intro h1 { font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: .5rem; }
 .workspace-intro p { line-height: 1.6; color: var(--merit-text-muted); }
+.eyebrow { color: var(--merit-accent); font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.workspace-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.5rem 0 .5rem; }
+.button-link { display: inline-flex; align-items: center; min-height: 44px; border: 1px solid var(--merit-border); padding: .65rem 1rem; border-radius: .5rem; background: var(--merit-panel, #141b29); color: var(--merit-text); text-decoration: none; }
 .workspace-nav { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.5rem 0; }
 button, .workspace-nav a { font: inherit; min-height: 44px; border: 1px solid var(--merit-border); padding: .65rem 1rem; border-radius: .5rem; background: var(--merit-panel, #141b29); color: var(--merit-text); }
 button { cursor: pointer; }
@@ -12,4 +15,15 @@ a { color: var(--merit-accent); }
 #connection-status { min-height: 1.5rem; }
 #workspace-grid { min-height: 260px; max-width: 100%; overflow: auto; }
 .workspace-note { border-top: 1px solid var(--merit-border); padding-top: 1rem; line-height: 1.6; }
+.hello-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0; }
+.hello-card, .developer-card { border: 1px solid var(--merit-border); border-radius: .9rem; padding: 1.25rem; background: color-mix(in srgb, var(--merit-panel, #141b29) 92%, transparent); }
+.hello-card h2, .developer-card h2 { margin-top: .25rem; }
+.hello-card p, .developer-card p { line-height: 1.55; color: var(--merit-text-muted); }
+.hello-card label { display: grid; gap: .35rem; margin: 1rem 0; font-size: .9rem; }
+.hello-card input { font: inherit; min-height: 42px; border: 1px solid var(--merit-border); border-radius: .45rem; padding: .55rem .7rem; background: #0c111c; color: var(--merit-text); }
+.feature-list { display: grid; gap: .5rem; }
+.feature-card { display: grid; gap: .2rem; text-align: left; min-height: auto; }
+.feature-card span { color: var(--merit-text-muted); font-size: .9rem; }
+.feature-card code { color: var(--merit-accent); font-size: .74rem; }
+.developer-card { margin: 1rem 0 2rem; }
 @media (max-width: 600px) { .merit-ux-main { padding: 1rem; } }

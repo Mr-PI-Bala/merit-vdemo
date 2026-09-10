@@ -6,6 +6,7 @@ import { verifyArtifact, artifactUrl } from '../scripts/artifacts.mjs';
 import { createGatewayClient, safeMeterEvent } from '../app_logic/gateway_client.mjs';
 import { createIdentityClient } from '../app_logic/identity_client.mjs';
 import capabilities from '../cfg/capabilities.json' with { type: 'json' };
+import { V01_FEATURES, featureById } from '../app_logic/feature_contract.mjs';
 
 test('fork identity changes all generated app routes without exposing unrelated env', () => {
   const config = publicConfig({ MERIT_APP_ID: 'second-app', MERIT_APP_NAME: 'Second app', SUPABASE_SERVICE_ROLE_KEY: 'secret-sentinel', MERIT_TENANT_GATEWAY_KEY: 'another-secret' });
@@ -77,4 +78,31 @@ test('capability manifest is explicit, v01-only, and does not overclaim alpha fe
     assert.equal(item.route.includes('somatune.vercel.app'), false, `${name} must not use legacy provider`);
   }
   assert.match(capabilities.capabilities.metering.blocker, /unauthenticated/);
+});
+test('every showcased feature has an explicit v01 route and provider contract', () => {
+  const ids = V01_FEATURES.map((item) => item.id);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const feature of V01_FEATURES) {
+    assert.ok(feature.route.length > 0);
+    assert.ok(feature.methods.length > 0);
+    assert.match(feature.provider, /^merit-(prod|store|subs|utils)v01$/);
+    assert.equal(featureById(feature.id).id, feature.id);
+  }
+  assert.throws(() => featureById('unknown'));
+});
+test('gateway adapter exercises every supported tenant and capability route shape', async () => {
+  const calls = [];
+  const client = createGatewayClient({ gateway: 'https://merit-prodv01.vercel.app', appId: 'hello-app', gatewayKey: 'server-key-that-is-long', fetchImpl: async (url, init) => {
+    calls.push({ url, init });
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  }});
+  for (const collection of ['contributions', 'questions', 'rooms', 'alerts', 'journal', 'push', 'members']) {
+    await client.tenant(collection);
+    await client.tenant(collection, { body: { text: 'fixture' }, bearer: 'session-token' });
+    await client.removeTenantItem(collection, 'item-1', { bearer: 'session-token' });
+  }
+  for (const capability of ['tenant', 'ama', 'journal', 'leaderboard', 'meritsubs', 'meritstore', 'room-media', 'alerts']) await client.capability(capability);
+  assert.equal(calls.length, 29);
+  assert.ok(calls.every(({ init }) => init.headers['X-Merit-Consumer'] === 'hello-app'));
+  assert.ok(calls.every(({ url }) => url.startsWith('https://merit-prodv01.vercel.app/')));
 });

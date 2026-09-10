@@ -1,6 +1,6 @@
 # MERIT VDemo
 
-A forkable app showcase for the MERIT v01 ecosystem. Implementation is in progress; this repository is not yet a verified full-capability release.
+A forkable hello-world app showcase for the MERIT v01 ecosystem. It demonstrates the consumer surface for identity, membership, journal, community, rooms, store, referrals, metering, analytics, and the MERIT workbench.
 
 The app consumes hosted MERIT services. Provider source, platform administration credentials, and private vault policy do not belong in this repository. Forks use their own app identity and scoped access; they never inherit showcase credentials.
 
@@ -14,12 +14,12 @@ Install Node.js 22 or newer, then run `npm run verify` and `npm start`. Open `ht
 
 The build downloads four pinned assets through the v01 gateway and checks their SHA-384 integrity before writing `dist/`. It stops if a package differs or is unavailable. There is no dependency on a sibling checkout or the private vault.
 
-The current preview mounts the actual merit_ux shell and merit_workbench and can check its v01 gateway connection. It has no member-data backend yet; the activity grid is empty. A successful connection check is not full provider acceptance.
+The preview mounts the actual merit_ux shell and merit_workbench, offers the complete feature map, and can check its v01 gateway connection. Hosted provider persistence and payment acceptance still require the end-to-end gate in [E2E_VALIDATION.md](merit-vdemo%20docs/IAR/E2E_VALIDATION.md).
 
 The checked-in [capability manifest](cfg/capabilities.json) is the source for what this alpha claims. It marks only the shell and workbench as implemented; identity, journal, community, commerce, referral, and notifications remain planned, and metering is blocked on the provider ingest implementation.
 
 Run `npm run probe:v01` for a read-only status matrix of the v01 gateway, store, subscriber, and utilities hosts. It reports status codes and safe service markers only; it does not authenticate, write data, or send messages.
 
-To prepare your own app, copy `.env.example` to `.env.local`, change `MERIT_APP_ID` and `MERIT_APP_NAME`, and rebuild. Only these public settings enter the build. Provider credentials remain on the platform. App-scoped provisioning, member journeys, hosted publishing, and clean-fork release validation are still being implemented.
+To prepare your own app, follow [Over Dinner](OVER_DINNER.md): copy `.env.example` to `.env.local`, change `MERIT_APP_ID` and `MERIT_APP_NAME`, run the tests, and start the local server. Only these public settings enter the build. Provider credentials remain on the platform.
 
 The gateway adapter is intentionally server-only. Do not import it from browser code or expose platform gateway keys to a fork’s public environment.
