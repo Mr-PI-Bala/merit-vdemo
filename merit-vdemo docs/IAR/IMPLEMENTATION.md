@@ -1,6 +1,6 @@
 # MERIT VDemo implementation and acceptance
 
-Status: V01 showcase foundation, catalog, sandbox checkout, utility publication, and provider health are verified; member lifecycle, signed metering, and clean-fork hosted proof remain open. Review date: 2026-09-11 (America/Los_Angeles).
+Status: V01 showcase foundation, catalog, sandbox checkout, utility publication, provider health, and the read-only V01 probe are verified; member lifecycle, signed metering, and clean-fork hosted proof remain open. Review date: 2026-09-11 (America/Los_Angeles).
 
 ## Intended product
 
@@ -61,6 +61,8 @@ Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `
 Remote CI evidence: the first workflow run failed because the repository lacked a lockfile. Added `package-lock.json` and pushed `d480423`; GitHub Actions run `34311567411` completed successfully on that commit. Fork reproducibility now has a passing remote test signal.
 
 Latest evidence: `merit-vdemo` tests pass 10/10 and the build passes after the V01 artifact registry refresh. A repository secret scan found no credential-pattern matches. The source is published in `Mr-PI-Bala/merit-vdemo`; the owner-aligned repository contains the same application source. Hosted provider health and catalog are green; the remaining readiness rows are lifecycle, signed meter persistence, and clean-fork hosted replay.
+
+The corrected `npm run probe:v01` now exits successfully with `ready=true`: it checks the direct V01 utility registry, confirms both `merit_meter` and `merit_referral`, and reports no gateway pending backends. This is a provider availability gate; it does not replace the authenticated lifecycle and persistence probes below.
 
 Current gateway checkout evidence: `C:\DApps\merit-prod\npm run e2e` passes the local portal, route, usage, redirect, and production health checks. The run skips Playwright screenshots because that dependency is absent. This confirms the v00 checkout and hosted gateway contract; it does not establish v01 provider parity.
 

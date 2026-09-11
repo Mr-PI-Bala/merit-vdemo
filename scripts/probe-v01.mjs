@@ -3,7 +3,7 @@ const services = [
   ['store', 'https://merit-storev01.vercel.app/api/v1/health'],
   ['subs', 'https://merit-subsv01.vercel.app/api/v1/health'],
   ['utils', 'https://merit-utilsv01.vercel.app/'],
-  ['utils-registry', 'https://merit-prodv01.vercel.app/pkg/meritutils/registry.json'],
+  ['utils-registry', 'https://merit-utilsv01.vercel.app/registry.json'],
 ];
 
 const checks = [];
@@ -30,7 +30,7 @@ for (const [name, value] of Object.entries(gateway?.details?.backing_services ||
 const store = checks.find((item) => item.name === 'store');
 if (store?.details?.offerings === 0) blockers.push('store has no offerings');
 const registry = checks.find((item) => item.name === 'utils-registry');
-for (const required of ['merit_usage_meter', 'merit_referral']) {
+for (const required of ['merit_meter', 'merit_referral']) {
   if (!registry?.details?.packages?.includes(required)) blockers.push(`utils registry missing ${required}`);
 }
 const ready = blockers.length === 0;
