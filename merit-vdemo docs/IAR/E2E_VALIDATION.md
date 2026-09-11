@@ -7,6 +7,7 @@ The acceptance boundary is the complete journey, not a homepage HTTP 200. Run th
 - [x] `npm ci`
 - [x] `npm test` — 10/10 feature map, identity binding, tenant isolation, meter privacy, artifact integrity, and manifest checks.
 - [x] `npm run build` — downloads every pinned v01 artifact, verifies SRI, and writes only allowlisted public config.
+- [x] GitHub Actions `Verify` completed successfully on commit `a71eb2e` in the published showcase repository.
 - [ ] `npm start` — open the app over HTTP and exercise connection check, guest join, workbench, and every feature card.
 
 ## Hosted journey gate
