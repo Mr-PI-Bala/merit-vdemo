@@ -2,11 +2,23 @@
 
 **Status:** BLOCKED
 
-**Recorded:** 2026-09-09
+**Recorded:** 2026-09-09; status refreshed 2026-09-11
 
 **Scope:** v01 vaulted production integration and the forkable `merit-vdemo` showcase.
 
 This record explains why the requested full-capability showcase cannot be declared ready. It records observed facts only; it contains no secret values.
+
+## Current status refresh (2026-09-11)
+
+The historical failures below are retained for traceability. The following gates are now green:
+
+- direct `merit-subsv01` health returns HTTP 200 with Supabase enabled;
+- `merit-storev01` reports Square sandbox plus 20 `merit-vdemo` offerings;
+- a `plus-monthly` sandbox checkout returned `paid`;
+- `merit-utilsv01` publishes the isolated V01 registry and the consumer pins it;
+- `merit-vdemo` tests pass 10/10 and its build passes.
+
+The active acceptance gaps are narrower than the original blocked report: signed webhook replay/idempotency, subscriber cancellation/downgrade lifecycle, signed meter persistence/read-back, and a hosted clean-fork replay. No additional owner dashboard action is currently required for these rows.
 
 ## Dependency flow: where to start
 
