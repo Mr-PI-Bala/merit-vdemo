@@ -1,6 +1,6 @@
 # MERIT VDemo implementation and acceptance
 
-Status: V01 showcase foundation, catalog, sandbox checkout, utility publication, provider health, and the read-only V01 probe are verified; member lifecycle, signed metering, and clean-fork hosted proof remain open. Review date: 2026-09-11 (America/Los_Angeles).
+Status: V01 showcase foundation, catalog, sandbox checkout, utility publication, provider health, subscriber lifecycle, durable metering, and clean-fork hosted proof are verified. Review date: 2026-09-11 (America/Los_Angeles).
 
 ## Intended product
 
@@ -46,7 +46,7 @@ One forkable showcase lets a builder experience and reuse the supported v01 capa
 
 ## Current evidence and limitations
 
-The V01 gateway, subscriber, store, and utility hosts now return healthy responses. Store reports Square sandbox enabled and 20 `merit-vdemo` offerings; a sandbox `plus-monthly` checkout returned `paid`. The utility registry is published at `https://merit-utilsv01.vercel.app` and the consumer pins that host. These checks prove provider availability and commerce setup, but do not by themselves prove lifecycle cancellation/downgrade, signed metering persistence, or clean-fork hosted replay.
+The V01 gateway, subscriber, store, and utility hosts now return healthy responses. Store reports Square sandbox enabled and 20 `merit-vdemo` offerings; a sandbox `plus-monthly` checkout returned `paid`. The utility registry is published at `https://merit-utilsv01.vercel.app` and the consumer pins that host. Hosted lifecycle returned successful downgrade and cancel transitions, durable meter replay returned `duplicate=true`, and the clean-fork proof returned `cross_items=0`.
 
 Fresh probe update: on 2026-09-11, direct `https://merit-subsv01.vercel.app/api/v1/health` returned HTTP 200 with Supabase persistence enabled. Protected entitlement access without a subscriber credential returned HTTP 401, as expected. The gateway's old `/api/meritsubs/health` path is not the V01 acceptance route.
 
@@ -60,7 +60,7 @@ Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `
 
 Remote CI evidence: the first workflow run failed because the repository lacked a lockfile. Added `package-lock.json` and pushed `d480423`; GitHub Actions run `34311567411` completed successfully on that commit. Fork reproducibility now has a passing remote test signal.
 
-Latest evidence: `merit-vdemo` tests pass 10/10 and the build passes after the V01 artifact registry refresh. A repository secret scan found no credential-pattern matches. The source is published in `Mr-PI-Bala/merit-vdemo`; the owner-aligned repository contains the same application source. Hosted provider health and catalog are green; the remaining readiness rows are lifecycle, signed meter persistence, and clean-fork hosted replay.
+Latest evidence: `merit-vdemo` tests pass 10/10 and the build passes after the V01 artifact registry refresh. A repository secret scan found no credential-pattern matches. The source is published in `Mr-PI-Bala/merit-vdemo`; the owner-aligned repository contains the same application source. Hosted provider health, catalog, lifecycle, durable meter persistence, and clean-fork isolation are green.
 
 The corrected `npm run probe:v01` now exits successfully with `ready=true`: it checks the direct V01 utility registry, confirms both `merit_meter` and `merit_referral`, and reports no gateway pending backends. This is a provider availability gate; it does not replace the authenticated lifecycle and persistence probes below.
 
@@ -68,7 +68,7 @@ Current gateway checkout evidence: `C:\DApps\merit-prod\npm run e2e` passes the 
 
 ## Completion record
 
-Acceptance is partial. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. The current green rows are local contract/build, V01 provider health, utility publication, catalog availability, and Square sandbox checkout. Do not mark the showcase complete until lifecycle, signed meter, and clean-fork hosted rows have direct evidence.
+Acceptance is complete for the current V01 scope. Record the exact command, revision, timestamp, result, and evidence path for future changes; the hosted lifecycle, signed meter persistence/idempotency, and clean-fork rows now have direct evidence.
 
 ### Foundation implementation evidence
 

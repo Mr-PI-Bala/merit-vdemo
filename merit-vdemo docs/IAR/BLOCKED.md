@@ -1,6 +1,6 @@
 # MERIT vDemo blocked-state record
 
-**Status:** BLOCKED
+**Status:** UNBLOCKED for the current V01 scope; historical blocked evidence is retained below.
 
 **Recorded:** 2026-09-09; status refreshed 2026-09-11
 
@@ -21,8 +21,10 @@ The historical failures below are retained for traceability. The following gates
 - subscriber migrations `001_subscribers.sql` and `002_partner_program.sql` are applied to the authorized V01 Supabase project; disposable guest onboarding and authenticated entitlements return HTTP 200;
 - the signed MeritStore webhook accepts the configured secret and two identical certified-grant deliveries return HTTP 200 with the entitlement remaining certified.
 - `merit-utilsv01` durable meter ingest is live; a disposable event returns `stub=false` and an identical replay returns `duplicate=true`.
+- hosted subscriber lifecycle is live: downgrade returned HTTP 200 with `tier=certified`, `subscription_status=active`, `plan=free`; cancel returned HTTP 200 with `tier=registered`, `subscription_status=cancelled`;
+- clean-fork isolation is live: two disposable app identities each wrote/read one journal item (both POST/GET HTTP 200) and a cross-app/subscriber read returned zero items; fixtures were removed after the proof.
 
-The active acceptance gaps are narrower than the original blocked report: subscriber cancellation/downgrade lifecycle and a hosted clean-fork replay. No additional owner dashboard action is currently required for these rows.
+There are no active technical acceptance gaps for the current V01 scope. No additional owner dashboard action is currently required. The remaining GitHub remote 404s for provider source mirrors do not affect the already-verified scoped Vercel deployments.
 
 ## Dependency flow: where to start
 
