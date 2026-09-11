@@ -2,12 +2,21 @@
   "ecosystem": "v01",
   "base": "https://merit-utilsv01.vercel.app",
   "artifacts": [
-    { "path": "merit_ux/0.1.3/merit_ux.mjs", "sri": "sha384-nBp+C//tpnzcuPdBVEBa4mpKC52WViDbmACvQftR7zf+t5C7Q3V4wLN4xAsd+IQi" },
-    { "path": "merit_ux/0.1.3/merit_ux.css", "sri": "sha384-8fV5NUVHohOAH3OuWAdJcHsTNnm0cxsUTdYeIYtRcpdlo9DepyvBJROZ25AEU9us" },
-    { "path": "merit_workbench/0.4.18/merit-workbench.js", "sri": "sha384-aNcJZoKSEJlS1Lg7qrwJ/BtMhubnl742kwXLuBxBX7ft4TdPzydlG9BCZ1HxHAON" },
-    { "path": "merit_workbench/0.4.18/merit-workbench.css", "sri": "sha384-rFDo3htc83PcEC0iE12ReDNpgUiIlBP+Ez3sOa3/G/kGsWJRjzUnZ+zXWueC6Jg1" }
+    {
+      "path": "merit_ux/0.1.3/merit_ux.mjs",
+      "sri": "sha384-nBp+C//tpnzcuPdBVEBa4mpKC52WViDbmACvQftR7zf+t5C7Q3V4wLN4xAsd+IQi"
+    },
+    {
+      "path": "merit_ux/0.1.3/merit_ux.css",
+      "sri": "sha384-t2lrh9VYGPmekcUt8/mNthwxEkgOBstLDnLn6g/dhFgWen+h3pDYGx+FLE4u4NiS"
+    },
+    {
+      "path": "merit_workbench/0.4.18/merit-workbench.js",
+      "sri": "sha384-aNcJZoKSEJlS1Lg7qrwJ/BtMhubnl742kwXLuBxBX7ft4TdPzydlG9BCZ1HxHAON"
+    },
+    {
+      "path": "merit_workbench/0.4.18/merit-workbench.css",
+      "sri": "sha384-u21263n25R9YNIR6NchCkydfaHjBQvyobfiuzh71m2cXXH7jjPQiP/HP4l0Xbu6j"
+    }
   ]
 }
-
-
-
