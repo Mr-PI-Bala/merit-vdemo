@@ -17,6 +17,7 @@ The historical failures below are retained for traceability. The following gates
 - a `plus-monthly` sandbox checkout returned `paid`;
 - `merit-utilsv01` publishes the isolated V01 registry and the consumer pins it;
 - `merit-vdemo` tests pass 10/10 and its build passes.
+- corrected `npm run probe:v01` exits with `ready=true`, including the direct utility registry and both `merit_meter` and `merit_referral` package checks.
 
 The active acceptance gaps are narrower than the original blocked report: signed webhook replay/idempotency, subscriber cancellation/downgrade lifecycle, signed meter persistence/read-back, and a hosted clean-fork replay. No additional owner dashboard action is currently required for these rows.
 
