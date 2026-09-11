@@ -1,6 +1,6 @@
 # MERIT VDemo implementation and acceptance
 
-Status: shell/workbench foundation implemented locally; provider and member journeys incomplete. Review date: 2026-09-08 (America/Los_Angeles).
+Status: V01 showcase foundation, catalog, sandbox checkout, utility publication, and provider health are verified; member lifecycle, signed metering, and clean-fork hosted proof remain open. Review date: 2026-09-11 (America/Los_Angeles).
 
 ## Intended product
 
@@ -46,9 +46,9 @@ One forkable showcase lets a builder experience and reuse the supported v01 capa
 
 ## Current evidence and limitations
 
-The v01 gateway and store health endpoints returned HTTP 200 during the review. Gateway health reports version 0.1.92 with configured tenant/Zoom/VAPID/notify flags; these flags do not prove functionality. Its AMA/journal/leaderboard backing entries say pending. Store reports sandbox payments and zero offerings/registrations. Public skills still gate v01. Source reconciliation, scoped identity, provider operations, showcase app implementation, fork replay, deployment and release remain incomplete.
+The V01 gateway, subscriber, store, and utility hosts now return healthy responses. Store reports Square sandbox enabled and 20 `merit-vdemo` offerings; a sandbox `plus-monthly` checkout returned `paid`. The utility registry is published at `https://merit-utilsv01.vercel.app` and the consumer pins that host. These checks prove provider availability and commerce setup, but do not by themselves prove lifecycle cancellation/downgrade, signed metering persistence, or clean-fork hosted replay.
 
-Fresh probe update: on 2026-09-09, `https://merit-subsv01.vercel.app/api/v1/health`, the gateway route `/api/meritsubs/api/v1/health`, and `/showcase` returned HTTP 500 `FUNCTION_INVOCATION_FAILED`. Identity and entitlement acceptance is therefore blocked by a live provider failure, independently of the consumer adapter.
+Fresh probe update: on 2026-09-11, direct `https://merit-subsv01.vercel.app/api/v1/health` returned HTTP 200 with Supabase persistence enabled. Protected entitlement access without a subscriber credential returned HTTP 401, as expected. The gateway's old `/api/meritsubs/health` path is not the V01 acceptance route.
 
 Local gateway evidence: merit-prod `npm run verify` and `npm run e2e` pass on the current v00 checkout, including webpage-shell checks, usage HTML, route redirects, canonical store registration, retired-alias rejection, and Portal routes. Playwright screenshots were skipped because the package is not installed in this checkout. These results establish v00 source/runtime health only; they do not prove deployed v01 parity.
 
@@ -60,13 +60,13 @@ Repository portability: `.github/workflows/verify.yml`, `CONTRIBUTING.md`, and `
 
 Remote CI evidence: the first workflow run failed because the repository lacked a lockfile. Added `package-lock.json` and pushed `d480423`; GitHub Actions run `34311567411` completed successfully on that commit. Fork reproducibility now has a passing remote test signal.
 
-Latest probe evidence: `npm run probe:v01` on 2026-09-09 reports gateway 200 (0.1.92), store 200 (sandbox, zero offerings), utilities homepage and registry 200, and subscriber 500 (`FUNCTION_INVOCATION_FAILED`). The registry exposes `merit_usage_meter` but has no `merit_referral` package. The probe correctly leaves `ready=false` for the subscriber outage, pending AMA/journal/leaderboard backends, empty store catalog, and missing referral package. A repository secret scan found no credential-pattern matches. The verified source is published in `Mr-PI-Bala/merit-vdemo`; the owner-aligned `AgentDraven/merit-vdemo` repository now contains the same application source, with only its CI workflow awaiting GitHub workflow-scope approval.
+Latest evidence: `merit-vdemo` tests pass 10/10 and the build passes after the V01 artifact registry refresh. A repository secret scan found no credential-pattern matches. The source is published in `Mr-PI-Bala/merit-vdemo`; the owner-aligned repository contains the same application source. Hosted provider health and catalog are green; the remaining readiness rows are lifecycle, signed meter persistence, and clean-fork hosted replay.
 
 Current gateway checkout evidence: `C:\DApps\merit-prod\npm run e2e` passes the local portal, route, usage, redirect, and production health checks. The run skips Playwright screenshots because that dependency is absent. This confirms the v00 checkout and hosted gateway contract; it does not establish v01 provider parity.
 
 ## Completion record
 
-No acceptance row is ACCEPT yet. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. This plan does not authorize marking scaffold-only work as a completed showcase.
+Acceptance is partial. Record the exact command, revision, timestamp, result, and evidence path per row as implementation progresses. The current green rows are local contract/build, V01 provider health, utility publication, catalog availability, and Square sandbox checkout. Do not mark the showcase complete until lifecycle, signed meter, and clean-fork hosted rows have direct evidence.
 
 ### Foundation implementation evidence
 

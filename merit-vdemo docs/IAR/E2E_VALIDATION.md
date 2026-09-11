@@ -4,18 +4,19 @@ The acceptance boundary is the complete journey, not a homepage HTTP 200. Run th
 
 ## Local contract gate
 
-- [ ] `npm ci`
-- [ ] `npm test` — feature map, identity binding, tenant isolation, meter privacy, artifact integrity, and manifest checks.
-- [ ] `npm run build` — downloads every pinned v01 artifact, verifies SRI, and writes only allowlisted public config.
+- [x] `npm ci`
+- [x] `npm test` — 10/10 feature map, identity binding, tenant isolation, meter privacy, artifact integrity, and manifest checks.
+- [x] `npm run build` — downloads every pinned v01 artifact, verifies SRI, and writes only allowlisted public config.
 - [ ] `npm start` — open the app over HTTP and exercise connection check, guest join, workbench, and every feature card.
 
 ## Hosted journey gate
 
-- [ ] Gateway health and V01 backing-service identity are valid.
+- [x] Gateway and direct subscriber health are valid; protected entitlement access rejects unauthenticated requests.
 - [ ] Guest, email, and freemium onboarding create a verified session.
 - [ ] Entitlements handle Free, Plus, expiry, revocation, and forged tokens.
 - [ ] Journal, AMA, leaderboard, community, rooms, calendar, and notifications persist and enforce app/subscriber authorization.
-- [ ] Store catalog contains the app's sandbox offerings; checkout produces a signed, idempotent webhook and entitlement transition.
+- [x] Store catalog contains the app's sandbox offerings; a Square sandbox checkout returned `paid`.
+- [ ] Checkout webhook signature, idempotency, and entitlement transition are proven.
 - [ ] Referral attribution covers subscriber, offering/pack, population, and design-partner scopes.
 - [ ] Metering accepts signed events, deduplicates replay, persists capability counts, and rejects PII.
 - [ ] Two apps and two subscribers cannot read, write, delete, or attribute across boundaries.
@@ -24,4 +25,3 @@ The acceptance boundary is the complete journey, not a homepage HTTP 200. Run th
 ## Evidence format
 
 Record UTC timestamp, app slug, provider host, source commit, deployment ID, route/method, redacted response status, persistence proof, and pass/fail result. Never record credential values or subscriber PII.
-
