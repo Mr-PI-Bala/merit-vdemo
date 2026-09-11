@@ -20,8 +20,9 @@ The historical failures below are retained for traceability. The following gates
 - corrected `npm run probe:v01` exits with `ready=true`, including the direct utility registry and both `merit_meter` and `merit_referral` package checks.
 - subscriber migrations `001_subscribers.sql` and `002_partner_program.sql` are applied to the authorized V01 Supabase project; disposable guest onboarding and authenticated entitlements return HTTP 200;
 - the signed MeritStore webhook accepts the configured secret and two identical certified-grant deliveries return HTTP 200 with the entitlement remaining certified.
+- `merit-utilsv01` durable meter ingest is live; a disposable event returns `stub=false` and an identical replay returns `duplicate=true`.
 
-The active acceptance gaps are narrower than the original blocked report: subscriber cancellation/downgrade lifecycle, signed meter persistence/read-back, and a hosted clean-fork replay. No additional owner dashboard action is currently required for these rows.
+The active acceptance gaps are narrower than the original blocked report: subscriber cancellation/downgrade lifecycle and a hosted clean-fork replay. No additional owner dashboard action is currently required for these rows.
 
 ## Dependency flow: where to start
 
